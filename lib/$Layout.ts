@@ -15,24 +15,20 @@ export class $Layout extends $Container<HTMLElement> {
     constructor(options?: $ContainerOptions) {
         super('layout', options);
         this.css({display: 'block', position: 'relative'})
-        new ResizeObserver(() => {
+        new ResizeObserver((records) => {
             if (!this.inDOM()) return;
-            // if (this._property.IS_RENDERING) return this._property.RENDER_REQUEST = true;
-            // if (this._property.RENDER_REQUEST) return this._property.RENDER_REQUEST = false;
-            // this._property.IS_RENDERING = true;
             this.render();
             this.scrollCompute()
             this.dom.dispatchEvent(new Event('resize'));
-            // setTimeout(() => {
-            //     this._property.IS_RENDERING = false;
-            //     if (this._property.RENDER_REQUEST) this.render();
-            // }, 10);
         }).observe(this.dom);
         document.addEventListener('scroll', (e) => {
             if (e.target === this.root().dom) this.scrollCompute();
         })
     }
 
+    /**
+     * The layout view type.
+     */
     type(): $LayoutType
     type(type: $LayoutType): this
     type(type?: $LayoutType) { return $.fluent(this, arguments, () => this._property.TYPE, () => $.set(this._property, 'TYPE', type)) }
@@ -42,25 +38,25 @@ export class $Layout extends $Container<HTMLElement> {
      */
     maxHeight(): number;
     maxHeight(height: $StateArgument<number> | undefined): this
-    maxHeight(height?: $StateArgument<number> | undefined) { return $.fluent(this, arguments, () => this._property.ROW_MAX_HEIGHT, () => $.set(this._property, 'ROW_MAX_HEIGHT', height, 'maxHeight'))}
+    maxHeight(height?: $StateArgument<number> | undefined) { return $.fluent(this, arguments, () => this._property.ROW_MAX_HEIGHT, () => $.set(this._property, 'ROW_MAX_HEIGHT', height))}
 
     /**
      * The column amount of waterfall layout row.
      */
     column(): number;
     column(column: $StateArgument<number> | undefined): this
-    column(column?: $StateArgument<number> | undefined) { return $.fluent(this, arguments, () => this._property.COLUNM, () => $.set(this._property, 'COLUNM', column, 'column'))}
+    column(column?: $StateArgument<number> | undefined) { return $.fluent(this, arguments, () => this._property.COLUNM, () => $.set(this._property, 'COLUNM', column))}
 
     gap(): number;
     gap(gap: $StateArgument<number> | undefined): this;
-    gap(gap?: $StateArgument<number> | undefined) { return $.fluent(this, arguments, () => this._property.GAP, ()=> $.set(this._property, 'GAP', gap, 'gap'))}
+    gap(gap?: $StateArgument<number> | undefined) { return $.fluent(this, arguments, () => this._property.GAP, ()=> $.set(this._property, 'GAP', gap,))}
 
     /**
      * The srcollable parent element. Default to the document `body` element.
      */
     root(): $Container
     root(root: $Container): this
-    root(root?: $Container) { return $.fluent(this, arguments, () => this._property.ROOT ?? $(document), () => $.set(this._property, 'ROOT', root, 'root')) }
+    root(root?: $Container) { return $.fluent(this, arguments, () => this._property.ROOT ?? $(document), () => $.set(this._property, 'ROOT', root)) }
 
     /**
      * The top and bottom of display element area, depend by window.innerHeight. Default to the `innerHeight / 2` at everytime scroll. 
@@ -68,7 +64,7 @@ export class $Layout extends $Container<HTMLElement> {
      */
     threshold(): number;
     threshold(threshold: $StateArgument<number | null> | undefined): this;
-    threshold(threshold?: $StateArgument<number | null> | undefined) { return $.fluent(this, arguments, () => this._property.THRESHOLD ?? innerHeight / 2, () => $.set(this._property, 'THRESHOLD', threshold, 'threshold')) }
+    threshold(threshold?: $StateArgument<number | null> | undefined) { return $.fluent(this, arguments, () => this._property.THRESHOLD ?? innerHeight, () => $.set(this._property, 'THRESHOLD', threshold)) }
 
     protected get COL_WIDTH() { return (this.offsetWidth - this._property.GAP * (this._property.COLUNM - 1)) / (this._property.COLUNM); }
     

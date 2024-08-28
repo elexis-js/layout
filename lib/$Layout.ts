@@ -18,12 +18,15 @@ export class $Layout extends $Container<HTMLElement> {
         new ResizeObserver((records) => {
             if (!this.inDOM()) return;
             this.render();
-            this.scrollCompute()
             this.dom.dispatchEvent(new Event('resize'));
         }).observe(this.dom);
         document.addEventListener('scroll', (e) => {
             if (e.target === this.root().dom) this.scrollCompute();
         })
+        new IntersectionObserver((entries) => {
+            if (!this.inDOM()) return;
+            this.render();
+        }).observe(this.dom)
     }
 
     /**
@@ -121,6 +124,7 @@ export class $Layout extends $Container<HTMLElement> {
     }
 
     render() {
+        if (!this.inDOM()) return;
         if (this._property.TYPE === 'justified') {
             const ROW_LIST = this.justifiedCompute();
             let ROW_POSITION_Y = 0;
@@ -164,8 +168,12 @@ export class $Layout extends $Container<HTMLElement> {
                 }
                 COL_POSITION_X += COL_WIDTH + this._property.GAP;
             }
-            if (COL_LIST.length) this.css({height: `${COL_LIST.sort((a, b) => b.height - a.height)[0].height}px`})
+            if (COL_LIST.length) {
+                const heightestCOL = COL_LIST.sort((a, b) => b.height - a.height)[0];
+                this.css({height: `${heightestCOL.height + heightestCOL.items.length * this._property.GAP}px`})
+            }
         }
+        this.scrollCompute();
         return this;
     }
 

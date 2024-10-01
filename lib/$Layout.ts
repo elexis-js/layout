@@ -10,7 +10,7 @@ export class $Layout extends $Container<HTMLElement> {
         COLUNM: 1,
         TYPE: 'justified' as $LayoutType,
         ROOT: null as null | $Container,
-        THRESHOLD: null as null | number
+        ITEM_PROPERTIES: new Map<$Element, $LayoutItemProperties>()
     }
     constructor(options?: $ContainerOptions) {
         super('layout', options);
@@ -61,20 +61,7 @@ export class $Layout extends $Container<HTMLElement> {
     root(root: $Container): this
     root(root?: $Container) { return $.fluent(this, arguments, () => this._property.ROOT ?? $(document), () => $.set(this._property, 'ROOT', root)) }
 
-    /**
-     * The top and bottom of display element area, depend by window.innerHeight. Default to the `innerHeight / 2` at everytime scroll. 
-     * Using `resize` event and $State value to change threshold dynamically.
-     */
-    threshold(): number;
-    threshold(threshold: $StateArgument<number | null> | undefined): this;
-    threshold(threshold?: $StateArgument<number | null> | undefined) { return $.fluent(this, arguments, () => this._property.THRESHOLD ?? innerHeight, () => $.set(this._property, 'THRESHOLD', threshold)) }
-
     protected get COL_WIDTH() { return (this.offsetWidth - this._property.GAP * (this._property.COLUNM - 1)) / (this._property.COLUNM); }
-    
-    protected computeLayout() {
-        if (this._property.TYPE === 'justified') return this.justifiedCompute();
-        else return this.justifiedCompute();
-    }
 
     protected justifiedCompute() {
         const ROW_LIST: Row[] = [];
@@ -124,7 +111,8 @@ export class $Layout extends $Container<HTMLElement> {
     }
 
     render() {
-        if (!this.inDOM()) return;
+        if (!this.inDOM()) return this;
+        this._property.ITEM_PROPERTIES.clear();
         if (this._property.TYPE === 'justified') {
             const ROW_LIST = this.justifiedCompute();
             let ROW_POSITION_Y = 0;
@@ -141,6 +129,7 @@ export class $Layout extends $Container<HTMLElement> {
                         left: `${ITEM_POSITION_X}px`,
                     })
                     item.$node.attribute('layout-item-ratio', item.ratio);
+                    this._property.ITEM_PROPERTIES.set(item.$node, {height: ROW.height, width: ITEM_WIDTH, top: ROW_POSITION_Y, left: ITEM_POSITION_X, ratio: item.ratio, $node: item.$node})
                     ITEM_POSITION_X += (ROW.height * item.ratio) + this._property.GAP;
                 }
                 ROW_POSITION_Y += ROW.height + this._property.GAP;
@@ -164,6 +153,7 @@ export class $Layout extends $Container<HTMLElement> {
                         left: `${COL_POSITION_X}px`
                     })
                     item.$node.attribute('layout-item-ratio', item.ratio);
+                    this._property.ITEM_PROPERTIES.set(item.$node, {height: ITEM_HEIGHT, width: COL_WIDTH, top: ITEM_POSITION_Y, left: COL_POSITION_X, ratio: item.ratio, $node: item.$node})
                     ITEM_POSITION_Y += ITEM_HEIGHT + this._property.GAP;
                 }
                 COL_POSITION_X += COL_WIDTH + this._property.GAP;
@@ -179,16 +169,16 @@ export class $Layout extends $Container<HTMLElement> {
 
     protected scrollCompute() {
         if (this.inDOM() === false) return;
-        const threshold = this.threshold();
-        this.children.array.forEach(child => {
-            if (!child.isElement()) return;
-            const rect = child.domRect();
-            if (rect.bottom < -threshold) child.hide(true, false);
-            else if (rect.top > innerHeight + threshold) child.hide(true, false);
-            else child.hide(false, false);
+        const scrollTopForLayout = document.documentElement.scrollTop - this.dom.offsetTop
+        this._property.ITEM_PROPERTIES.forEach((properties, $node) => {
+            const itemTop = properties.top
+            const itemBottom = properties.top + properties.height;
+            if (itemBottom > scrollTopForLayout && itemTop < scrollTopForLayout + innerHeight + properties.height) $node.hide(false, false);
+            else $node.hide(true, false);
         })
         this.children.render();
     }
 }
 
-export type $LayoutType = 'justified' | 'waterfall'
+export type $LayoutType = 'justified' | 'waterfall';
+export type $LayoutItemProperties = {height: number, width: number, top: number, left: number, ratio: number, $node: $Element};

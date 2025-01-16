@@ -1,7 +1,7 @@
-import { $ContainerOptions, $Container, $StateArgument, $Element } from "elexis";
+import { $ContainerOptions, $Container, $StateArgument, $Element, $ContainerEventMap } from "elexis";
 
 export interface $LayoutOptions extends $ContainerOptions {}
-export class $Layout extends $Container<HTMLElement> {
+export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Container<HTMLElement, EM> {
     protected _property = {
         ROW_MAX_HEIGHT: 200,
         GAP: 0,
@@ -20,9 +20,7 @@ export class $Layout extends $Container<HTMLElement> {
             this.render();
             this.dom.dispatchEvent(new Event('resize'));
         }).observe(this.dom);
-        document.addEventListener('scroll', (e) => {
-            if (e.target === this.root().dom) this.scrollCompute();
-        })
+        document.addEventListener('scroll', (e) => {if (e.target === this.root().dom) this.scrollCompute()}, {passive: true})
         new IntersectionObserver((entries) => {
             if (!this.inDOM()) return;
             this.render();
@@ -112,6 +110,7 @@ export class $Layout extends $Container<HTMLElement> {
 
     render() {
         if (!this.inDOM()) return this;
+        this.events.fire('beforeRender');
         this._property.ITEM_PROPERTIES.clear();
         if (this._property.TYPE === 'justified') {
             const ROW_LIST = this.justifiedCompute();
@@ -130,6 +129,7 @@ export class $Layout extends $Container<HTMLElement> {
                     })
                     item.$node.attribute('layout-item-ratio', item.ratio);
                     this._property.ITEM_PROPERTIES.set(item.$node, {height: ROW.height, width: ITEM_WIDTH, top: ROW_POSITION_Y, left: ITEM_POSITION_X, ratio: item.ratio, $node: item.$node})
+                    item.$node.coordinate({x: ITEM_POSITION_X, y: ROW_POSITION_Y, height: ROW.height, width: ITEM_WIDTH})
                     ITEM_POSITION_X += (ROW.height * item.ratio) + this._property.GAP;
                 }
                 ROW_POSITION_Y += ROW.height + this._property.GAP;
@@ -154,16 +154,20 @@ export class $Layout extends $Container<HTMLElement> {
                     })
                     item.$node.attribute('layout-item-ratio', item.ratio);
                     this._property.ITEM_PROPERTIES.set(item.$node, {height: ITEM_HEIGHT, width: COL_WIDTH, top: ITEM_POSITION_Y, left: COL_POSITION_X, ratio: item.ratio, $node: item.$node})
+                    item.$node.coordinate({x: COL_POSITION_X, y: ITEM_POSITION_Y, height: ITEM_HEIGHT, width: COL_WIDTH})
                     ITEM_POSITION_Y += ITEM_HEIGHT + this._property.GAP;
                 }
                 COL_POSITION_X += COL_WIDTH + this._property.GAP;
             }
             if (COL_LIST.length) {
                 const heightestCOL = COL_LIST.sort((a, b) => b.height - a.height)[0];
-                this.css({height: `${heightestCOL.height + heightestCOL.items.length * this._property.GAP}px`})
+                this.css({height: `${heightestCOL.height + heightestCOL.items.length * this._property.GAP}px`});
+            } else {
+                this.css({height: ''})
             }
         }
         this.scrollCompute();
+        this.events.fire('afterRender');
         return this;
     }
 
@@ -173,6 +177,7 @@ export class $Layout extends $Container<HTMLElement> {
         this._property.ITEM_PROPERTIES.forEach((properties, $node) => {
             const itemTop = properties.top
             const itemBottom = properties.top + properties.height;
+            if ($node.attribute('focus') === '' || document.activeElement === $node.dom) return; // skip focus dom
             if (itemBottom > scrollTopForLayout && itemTop < scrollTopForLayout + innerHeight + properties.height) $node.hide(false, false);
             else $node.hide(true, false);
         })
@@ -182,3 +187,8 @@ export class $Layout extends $Container<HTMLElement> {
 
 export type $LayoutType = 'justified' | 'waterfall';
 export type $LayoutItemProperties = {height: number, width: number, top: number, left: number, ratio: number, $node: $Element};
+
+export interface $LayoutEventMap extends $ContainerEventMap {
+    beforeRender: [];
+    afterRender: [];
+}

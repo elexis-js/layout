@@ -1,7 +1,7 @@
 {
   "name": "@elexis.js/layout",
   "description": "A simple justified/waterfall layout for ElexisJS",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
@@ -9,17 +9,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://git.defaultkavy.com/elexis/layout.git"
+    "url": "git+https://github.com/elexis-js/layout.git"
   },
   "module": "index.ts",
   "bugs": {
-    "url": "https://git.defaultkavy.com/elexis/layout/issues"
+    "url": "https://github.com/elexis-js/layout/issues"
   },
-  "homepage": "https://git.defaultkavy.com/elexis/layout",
+  "homepage": "https://github.com/elexis-js/layout",
   "keywords": ["web", "front-end", "lib", "fluent", "framework"],
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "elexis": "../../elexis"
+    "elexis": "^0.3.1"
   }
 }

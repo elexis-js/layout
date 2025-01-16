@@ -1,15 +1,15 @@
 # @elexis/layout
-Auto layout component for [ElexisJS](https://github.com/defaultkavy/elexis)
+Auto layout component for [ElexisJS](https://github.com/defaultkavy-dev/elexis)
 
 ## Installation
 ```
-npm i @elexis/layout
+npm i @elexis.js/layout
 ```
 
 ## Usage
 ```ts
 import "elexis";
-import "@elexis/layout";
+import "@elexis.js/layout";
 
 const $layout = $('layout')
     .type("justified") // justified view

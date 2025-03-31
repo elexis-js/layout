@@ -14,7 +14,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
     }
     constructor(options?: $ContainerOptions) {
         super('layout', options);
-        this.css({display: 'block', position: 'relative'})
+        this.style({display: 'block', position: 'relative'})
         new ResizeObserver((records) => {
             if (!this.inDOM()) return;
             this.render();
@@ -120,7 +120,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
                 if (ROW.height > this._property.ROW_MAX_HEIGHT) ROW.height = this._property.ROW_MAX_HEIGHT;
                 for (const item of ROW.items) {
                     const ITEM_WIDTH = item.ratio * ROW.height;
-                    item.$node.css({
+                    item.$node.style({
                         position: 'absolute',
                         height: `${ROW.height}px`,
                         width: `${ITEM_WIDTH}px`,
@@ -134,7 +134,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
                 }
                 ROW_POSITION_Y += ROW.height + this._property.GAP;
             }
-            this.css({height: `${ROW_POSITION_Y}px`})
+            this.style({height: `${ROW_POSITION_Y}px`})
         }
 
         else if (this._property.TYPE = 'waterfall') {
@@ -145,7 +145,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
                 let ITEM_POSITION_Y = 0;
                 for (const item of COL.items) {
                     const ITEM_HEIGHT = COL_WIDTH / item.ratio;
-                    item.$node.css({
+                    item.$node.style({
                         position: 'absolute',
                         height: `${ITEM_HEIGHT}px`,
                         width: `${COL_WIDTH}px`,
@@ -161,9 +161,9 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
             }
             if (COL_LIST.length) {
                 const heightestCOL = COL_LIST.sort((a, b) => b.height - a.height)[0];
-                this.css({height: `${heightestCOL.height + heightestCOL.items.length * this._property.GAP}px`});
+                this.style({height: `${heightestCOL.height + heightestCOL.items.length * this._property.GAP}px`});
             } else {
-                this.css({height: ''})
+                this.style({height: ''})
             }
         }
         this.scrollCompute();

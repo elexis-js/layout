@@ -1,5 +1,5 @@
 # @elexis/layout
-Auto layout component for [ElexisJS](https://github.com/defaultkavy-dev/elexis)
+Auto layout component for [ElexisJS](https://github.com/defaultkavy/elexis)
 
 ## Installation
 ```

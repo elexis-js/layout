@@ -1,11 +1,11 @@
 {
   "name": "@elexis.js/layout",
   "description": "A simple justified/waterfall layout for ElexisJS",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
-    "url": "https://git.defaultkavy.com/defaultkavy"
+    "url": "https://github.com/defaultkavy"
   },
   "repository": {
     "type": "git",

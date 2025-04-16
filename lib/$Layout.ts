@@ -173,12 +173,12 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
 
     protected scrollCompute() {
         if (this.inDOM() === false) return;
-        const scrollTopForLayout = document.documentElement.scrollTop - this.dom.offsetTop
+        const layoutScrollTop = -this.dom.getBoundingClientRect().top;
         this._property.ITEM_PROPERTIES.forEach((properties, $node) => {
             const itemTop = properties.top
             const itemBottom = properties.top + properties.height;
             if ($node.attribute('focus') === '' || document.activeElement === $node.dom) return; // skip focus dom
-            if (itemBottom > scrollTopForLayout && itemTop < scrollTopForLayout + innerHeight + properties.height) $node.hide(false, false);
+            if (itemBottom > layoutScrollTop && itemTop < layoutScrollTop + innerHeight + properties.height) $node.hide(false, false);
             else $node.hide(true, false);
         })
         this.children.render();

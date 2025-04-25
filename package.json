@@ -1,7 +1,7 @@
 {
   "name": "@elexis.js/layout",
   "description": "A simple justified/waterfall layout for ElexisJS",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",

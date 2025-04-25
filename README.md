@@ -64,3 +64,6 @@ $layout.content([
 ```
 
 Store image dimension data should be the best practice for building layout.
+
+## Example Showcase
+- [DEFAULTKAVY Artist Website](https://defaultkavy.com/artist/artworks)

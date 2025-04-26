@@ -1,4 +1,4 @@
-import { type $ContainerOptions, $Container, type $StateArgument, $Element, type $ContainerEventMap } from "elexis";
+import { type $ContainerOptions, $Container, type $StateArgument, type $ContainerEventMap, $HTMLElement } from "elexis";
 
 export interface $LayoutOptions extends $ContainerOptions {}
 export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Container<HTMLElement, EM> {
@@ -10,7 +10,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
         COLUNM: 1,
         TYPE: 'justified' as $LayoutType,
         ROOT: null as null | $Container,
-        ITEM_PROPERTIES: new Map<$Element, $LayoutItemProperties>()
+        ITEM_PROPERTIES: new Map<$HTMLElement, $LayoutItemProperties>()
     }
     constructor(options?: $ContainerOptions) {
         super('layout', options);
@@ -65,10 +65,10 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
         const ROW_LIST: Row[] = [];
         const LAYOUT_WIDTH = this.offsetWidth;
         type Row = {items: Item[], ratio: number, height: number};
-        type Item = {$node: $Element, ratio: number};
+        type Item = {$node: $HTMLElement, ratio: number};
         for (const child of this.children.array) {
-            const $child = $(child) as $Element;
-            if ($child instanceof $Element === false) continue;
+            const $child = $(child) as $HTMLElement;
+            if ($child instanceof $HTMLElement === false) continue;
             const ratio_attr = $child.attribute('layout-item-ratio');
             const CHILD_RATIO: number = ratio_attr ? parseFloat(ratio_attr) : $child.dom.offsetWidth / $child.dom.offsetHeight;
             const CHILD_ITEM: Item = {$node: $child, ratio: CHILD_RATIO};
@@ -86,15 +86,15 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
     protected waterfallCompute() {
         const COLUMN_LIST: Column[] = [];
         type Column = {items: Item[], ratio: number, height: number};
-        type Item = {$node: $Element, ratio: number};
+        type Item = {$node: $HTMLElement, ratio: number};
         const COL_WIDTH = this.COL_WIDTH;
         const SHORTEST_COL = () => { 
             if (COLUMN_LIST.length < this._property.COLUNM) { const col: Column = {items: [], ratio: 0, height: 0}; COLUMN_LIST.push(col); return col; }
             return [...COLUMN_LIST].sort((a, b) => a.height - b.height)[0];
         }
         for (const child of this.children.array) {
-            const $child = $(child) as $Element;
-            if ($child instanceof $Element === false) continue;
+            const $child = $(child) as $HTMLElement;
+            if ($child instanceof $HTMLElement === false) continue;
             const ratio_attr = $child.attribute('layout-item-ratio');
             const CHILD_RATIO: number = ratio_attr ? parseFloat(ratio_attr) : $child.dom.offsetWidth / $child.dom.offsetHeight;
             const CHILD_ITEM: Item = {$node: $child, ratio: CHILD_RATIO};
@@ -186,7 +186,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
 }
 
 export type $LayoutType = 'justified' | 'waterfall';
-export type $LayoutItemProperties = {height: number, width: number, top: number, left: number, ratio: number, $node: $Element};
+export type $LayoutItemProperties = {height: number, width: number, top: number, left: number, ratio: number, $node: $HTMLElement};
 
 export interface $LayoutEventMap extends $ContainerEventMap {
     beforeRender: [];

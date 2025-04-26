@@ -1,6 +1,6 @@
-import 'elexis';
+import 'elexis/core';
 import { $Layout } from './lib/$Layout';
-declare module 'elexis' {
+declare module 'elexis/core' {
     export namespace $ {
         export interface TagNameElementMap {
             'layout': typeof $Layout;

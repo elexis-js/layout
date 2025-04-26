@@ -1,7 +1,7 @@
 {
   "name": "@elexis.js/layout",
   "description": "A simple justified/waterfall layout for ElexisJS",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
@@ -20,6 +20,6 @@
   "license": "ISC",
   "type": "module",
   "peerDependencies": {
-    "elexis": "^1.0.0"
+    "elexis": "^2.0.0"
   }
 }

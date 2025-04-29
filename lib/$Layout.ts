@@ -12,7 +12,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
         ROOT: null as null | $Container,
         ITEM_PROPERTIES: new Map<$HTMLElement, $LayoutItemProperties>()
     }
-    constructor(options?: $ContainerOptions) {
+    constructor(options?: Partial<$ContainerOptions>) {
         super('layout', options);
         this.style({display: 'block', position: 'relative'})
         new ResizeObserver((records) => {

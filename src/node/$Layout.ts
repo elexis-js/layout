@@ -1,4 +1,6 @@
-import { type $ContainerOptions, $Container, type $StateArgument, type $ContainerEventMap, $HTMLElement } from "elexis";
+import { $Container, type $ContainerEventMap, type $ContainerOptions } from "elexis/node/$Container";
+import { $HTMLElement } from "elexis/node/$HTMLElement";
+import type { $StateArgument } from "elexis/structure/$State";
 
 export interface $LayoutOptions extends $ContainerOptions {}
 export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Container<HTMLElement, EM> {
@@ -99,6 +101,7 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
             const CHILD_RATIO: number = ratio_attr ? parseFloat(ratio_attr) : $child.dom.offsetWidth / $child.dom.offsetHeight;
             const CHILD_ITEM: Item = {$node: $child, ratio: CHILD_RATIO};
             const COL = SHORTEST_COL();
+            if (!COL) throw new Error('shortest column is undefined')
             let ITEMS_RATIO = 0;
             COL.items.forEach(item => ITEMS_RATIO += item.ratio);
             const COL_RATIO_WITH_CHILD = COL_WIDTH / (COL.height + COL_WIDTH / CHILD_RATIO);
@@ -160,8 +163,9 @@ export class $Layout<EM extends $LayoutEventMap = $LayoutEventMap> extends $Cont
                 COL_POSITION_X += COL_WIDTH + this._property.GAP;
             }
             if (COL_LIST.length) {
-                const heightestCOL = COL_LIST.sort((a, b) => b.height - a.height)[0];
-                this.style({height: `${heightestCOL.height + heightestCOL.items.length * this._property.GAP}px`});
+                const highestCOL = COL_LIST.sort((a, b) => b.height - a.height)[0];
+                if (!highestCOL) throw new Error('highest column is undefined')
+                this.style({height: `${highestCOL.height + highestCOL.items.length * this._property.GAP}px`});
             } else {
                 this.style({height: ''})
             }

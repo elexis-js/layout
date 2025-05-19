@@ -1,5 +1,5 @@
 import 'elexis/core';
-import { $Layout } from './lib/$Layout';
+import { $Layout } from '#node/$Layout';
 declare module 'elexis/core' {
     export namespace $ {
         export interface TagNameElementMap {
@@ -9,4 +9,4 @@ declare module 'elexis/core' {
 }
 $.registerTagName('layout', $Layout)
 
-export * from './lib/$Layout'
+export * from '#node/$Layout'

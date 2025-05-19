@@ -1,7 +1,7 @@
 {
   "name": "@elexis.js/layout",
   "description": "A simple justified/waterfall layout for ElexisJS",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": {
     "name": "defaultkavy",
     "email": "defaultkavy@gmail.com",
@@ -16,7 +16,13 @@
     "url": "https://github.com/elexis-js/layout/issues"
   },
   "homepage": "https://github.com/elexis-js/layout",
-  "keywords": ["web", "front-end", "lib", "fluent", "framework"],
+  "keywords": [
+    "web",
+    "front-end",
+    "lib",
+    "fluent",
+    "framework"
+  ],
   "license": "ISC",
   "type": "module",
   "peerDependencies": {
